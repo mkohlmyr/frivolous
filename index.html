@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
+            html {
+                font-family: 'Source Code Pro', monospace;
+            }
+
+            body {
+                margin: 0px;
+                background: rgba(29, 29, 29, 255);
+                overflow: hidden;
+            }
+
+            main {
+                /* height: 480px;
+                width: 720px;
+
+                position: absolute;
+                top: calc(50% - 240px);
+                left: calc(50% - 360px);
+
+                border: 1px solid rgb(255, 0, 0); */
+            }
+
+            canvas {
+                /* height: 100%;
+                width: 100%; */
+            }
+
+            ul {
+                position: absolute;
+                top: 0;
+                right: 0;
+                margin: 0px;
+                z-index: 1;
+                color: rgba(255, 255, 255, 255);
+                font-size: 12px;
+                padding: 3px 5px;
+            }
+
+            ul li {
+                list-style-type: none;
+            }
+
+            /* summary:after {
+  background: url(some-picture);
+  float: left; 
+  height: 20px;
+  width: 20px;
+  content: " ";
+}
+
+details[open] summary:after {
+  background: url(other-picture); */
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <ul>
+            <li><span data-property="frames"></span> fps</li>
+        </ul>
+
+        <main>
+            <canvas>
+
+            </canvas>
+        </main>
+        <script src="app.js"></script>
+    </body>
+
+</html>
