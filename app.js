@@ -6,6 +6,14 @@
     webkitSpeechRecognitionEvent: SpeechRecognitionEvent
   } = window) {
 
+  const main = document.querySelector("main");
+  const canvas = document.querySelector("canvas");
+
+  const RAD = 180 / Math.PI;
+  const ZERO = (Number.MAX_SAFE_INTEGER * 0.5) - ((Number.MAX_SAFE_INTEGER * 0.5) % 360);
+
+
+
   const TOKEN_TURN = "turn";
   const TOKEN_LDIR = "left";
   const TOKEN_RDIR = "right";
@@ -72,11 +80,11 @@
   };
 
   const DIST_PER_MS = 0.013;
-  const DEGS_PER_MS = 0.09;
+  const DEGS_PER_MS = 0.05;
   class Actor {
 
     constructor(x, y) {
-      this.t = Date.now();
+      this.moved_at = Date.now();
       this.x = x;
       this.y = y;
       this.d = 0;
@@ -87,51 +95,60 @@
       // this.direction = 0; // 0 -> 360
 
       this.direction = {
-        travel: 0, // 0 -> 359
-        target: 0, // 0 -> 359
+        travel: ZERO,
+        target: ZERO,
       };
       // TODO: SIMPLIFY LOGIC BY TURNING IN X degree increments PER MS?
     }
 
     turn(adjustment) {
-      const previous = this.direction.travel;
-      const adjusted = previous + adjustment;
-      const targeted = adjusted % 360;
-      // 
-      // targeted could be negative currently, need to recalculate for below 0 : 360 - X
+      this.direction.target = this.direction.travel + adjustment;
+      // const previous = this.direction.travel;
+      // const adjusted = previous + adjustment;
+      // const cumulaive
 
-      this.direction.target = targeted;
+      // console.log(
+      //   `
+      //   direction of travel: ${this.direction.travel}\n
+      //   adjusted direction of travel: ${adjusted}\n
+      //   targeted direction of travel: ${targeted}\n
+      //   `
+      // );
+
+      // if (targeted < 0) {
+      //   this.direction.target = 360 + targeted;
+      // } else {
+      //   this.direction.target = targeted;
+      // }
+      console.log('modified target direction: ', this.direction.target % 360);
     }
 
     move() {
-      const n = Date.now();
-      const ms = n - this.t;
-      const d = DIST_PER_MS * ms;
-      this.t = n;
+      const now = Date.now();
+      const ms = now - this.moved_at;
 
+      // We're okay with this being slightly more or less than the exact 
+      // turn requested by a few degrees at most, no need to add a 
+      // constraint.
+      const degrees = DEGS_PER_MS * ms;
+      const distance = DIST_PER_MS * ms;
 
-      const turn_available = DEGS_PER_MS * ms;
-      const turn_desirable = Math.min(turn_available);
-
-      if () {
-        // turn left
+      // The direction of travel should move closer to the target direction.
+      // 
+      switch (true) {
+        case this.direction.travel > this.direction.target:
+          this.direction.travel -= degrees;
+          break;
+        case this.direction.travel < this.direction.target:
+          this.direction.travel += degrees;
+          break;
+        default:
+          break;
       }
-      if () {
-        // turn right
-        this.direction.travel = this.direction.travel +=
-      }
-      this.direction.travel = this.target.travel + ()
 
-
-      const turn_remaining_a = this.direction.target - this.direction.travel;
-      const turn_remaining_b = this.direction.target - this.direction.travel;
-
-
-      /**
-       * TODO:
-       * Project distance along a line based on steer direction vs current direction
-       */
-      this.x += d;
+      this.x += distance * Math.cos(this.direction.travel / RAD);
+      this.y += distance * Math.sin(this.direction.travel / RAD);
+      this.moved_at = now;
     }
   }
 
@@ -140,6 +157,7 @@
   const act = new Actor(dx, dy);
 
   const execute = (state, cdata) => {
+    console.log(cdata);
     switch (state) {
       case STATE_TDEG:
         switch (cdata.direction) {
@@ -200,8 +218,7 @@
 
 
 
-  const main = document.querySelector("main");
-  const canvas = document.querySelector("canvas");
+
 
 
   window.addEventListener('resize', () => {
