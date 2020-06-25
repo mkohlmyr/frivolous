@@ -12,8 +12,6 @@
   const RAD = 180 / Math.PI;
   const ZERO = (Number.MAX_SAFE_INTEGER * 0.5) - ((Number.MAX_SAFE_INTEGER * 0.5) % 360);
 
-
-
   const TOKEN_TURN = "turn";
   const TOKEN_LDIR = "left";
   const TOKEN_RDIR = "right";
@@ -87,40 +85,15 @@
       this.moved_at = Date.now();
       this.x = x;
       this.y = y;
-      this.d = 0;
-      this.s = 0;// 0 = UP or RIGHT, mod around 360 and ABS for right number?
-      this.degrees_remaining;
-      this.steering = 0;
-      this.turning = 0;
-      // this.direction = 0; // 0 -> 360
 
       this.direction = {
         travel: ZERO,
         target: ZERO,
       };
-      // TODO: SIMPLIFY LOGIC BY TURNING IN X degree increments PER MS?
     }
 
     turn(adjustment) {
       this.direction.target = this.direction.travel + adjustment;
-      // const previous = this.direction.travel;
-      // const adjusted = previous + adjustment;
-      // const cumulaive
-
-      // console.log(
-      //   `
-      //   direction of travel: ${this.direction.travel}\n
-      //   adjusted direction of travel: ${adjusted}\n
-      //   targeted direction of travel: ${targeted}\n
-      //   `
-      // );
-
-      // if (targeted < 0) {
-      //   this.direction.target = 360 + targeted;
-      // } else {
-      //   this.direction.target = targeted;
-      // }
-      console.log('modified target direction: ', this.direction.target % 360);
     }
 
     move() {
@@ -157,7 +130,6 @@
   const act = new Actor(dx, dy);
 
   const execute = (state, cdata) => {
-    console.log(cdata);
     switch (state) {
       case STATE_TDEG:
         switch (cdata.direction) {
@@ -284,6 +256,10 @@
         this.tail = Node.disconnect(this.tail);
       }
     }
+
+    grow(s) {
+      this.size += s;
+    }
   }
 
 
@@ -315,7 +291,8 @@
 
   const frameCounter = document.querySelector("span[data-property=\"frames\"]");
 
-  window.setTimeout(() => {
+  window.setInterval(() => { ent.grow(10); }, 2000)
+  window.setInterval(() => {
     frameCounter.innerHTML = fps;
     fps = 0;
   }, 1000);
